@@ -1,23 +1,30 @@
 import random
 
-def check_matches(grid):
-    # Проверка совпадений на игровом поле и их удаление
+def check_matches(game_board):
+    """Проверяет наличие совпадений на игровом поле и удаляет их.
+
+    Args:
+        game_board (GameBoard): Игровое поле.
+
+    Returns:
+        bool: True, если были найдены и удалены совпадения, иначе False.
+    """
     matches = []
 
-    # Проверка совпадений по горизонтали
-    for row in range(len(grid)):
-        for col in range(len(grid[0]) - 2):
-            if grid[row][col] is not None:
-                if grid[row][col] == grid[row][col+1] == grid[row][col+2]:
+    # Поиск совпадений по горизонтали
+    for row in range(game_board.GRID_HEIGHT):
+        for col in range(game_board.GRID_WIDTH - 2):
+            if game_board.grid[row][col] is not None:
+                if game_board.grid[row][col] == game_board.grid[row][col+1] == game_board.grid[row][col+2]:
                     matches.append((row, col))
                     matches.append((row, col+1))
                     matches.append((row, col+2))
 
-    # Проверка совпадений по вертикали
-    for row in range(len(grid) - 2):
-        for col in range(len(grid[0])):
-            if grid[row][col] is not None:
-                if grid[row][col] == grid[row+1][col] == grid[row+2][col]:
+    # Поиск совпадений по вертикали
+    for row in range(game_board.GRID_HEIGHT - 2):
+        for col in range(game_board.GRID_WIDTH):
+            if game_board.grid[row][col] is not None:
+                if game_board.grid[row][col] == game_board.grid[row+1][col] == game_board.grid[row+2][col]:
                     matches.append((row, col))
                     matches.append((row+1, col))
                     matches.append((row+2, col))
@@ -25,31 +32,37 @@ def check_matches(grid):
     # Удаление совпадений
     for match in matches:
         row, col = match
-        grid[row][col] = None
+        game_board.grid[row][col] = None
 
     return len(matches) > 0
 
-def generate_objects(grid):
-    # Генерация новых объектов на пустых ячейках поля
-    for row in range(len(grid)):
-        for col in range(len(grid[0])):
-            if grid[row][col] is None:
+def generate_objects(game_board):
+    """Генерирует новые объекты на пустых ячейках игрового поля.
+
+    Args:
+        game_board (GameBoard): Игровое поле.
+    """
+    for row in range(game_board.GRID_HEIGHT):
+        for col in range(game_board.GRID_WIDTH):
+            if game_board.grid[row][col] is None:
                 # Создание нового случайного объекта
                 object_image = load_random_object_image()  # Функция загрузки случайного изображения объекта
-                grid[row][col] = GameObject(object_image)
+                game_board.grid[row][col] = game_board.GameObject(object_image)
 
-def update_score(score, points):
-    # Обновление счета
-    score += points
-    return score
+def update_score(game_board, points):
+    """Обновляет счет игры.
+
+    Args:
+        game_board (GameBoard): Игровое поле.
+        points (int): Количество очков для добавления к счету.
+    """
+    game_board.score += points
 
 def load_random_object_image():
-    # Загрузка случайного изображения объекта
-    object_images = [
-        pygame.image.load("png/object1.png"),
-        pygame.image.load("png/object2.png"),
-        pygame.image.load("png/object3.png"),
-        pygame.image.load("png/object4.png"),
-        pygame.image.load("png/object5.png")
-    ]
-    return random.choice(object_images)
+    """Загружает случайное изображение объекта.
+
+    Returns:
+        pygame.Surface: Изображение объекта.
+    """
+    image_path = f"C:\\Users\\sasamin4ik\\Desktop\\Match-3 Quest\\png\\object{random.randint(1, 5)}.png"
+    return pygame.image.load(image_path)
