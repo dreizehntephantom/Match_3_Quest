@@ -1,30 +1,32 @@
 import pygame
+from pygame.locals import *
 
-def handle_input(events, game_board):
-    for event in events:
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            handle_mouse_click(event, game_board)
-        elif event.type == pygame.MOUSEBUTTONUP:
-            handle_mouse_release(event, game_board)
 
-def handle_mouse_click(event, game_board):
-    if event.button == 1:  # Левая кнопка мыши
-        mouse_x, mouse_y = event.pos
-        clicked_row, clicked_col = get_clicked_cell(mouse_x, mouse_y)
-        
-        # Передаем координаты клика в метод move_object игрового поля
-        game_board.move_object(clicked_row, clicked_col)
+def handle_input(game_board):
+    """Обрабатывает пользовательский ввод.
 
-def handle_mouse_release(event, game_board):
-    if event.button == 1:  # Левая кнопка мыши
-        mouse_x, mouse_y = event.pos
-        released_row, released_col = get_clicked_cell(mouse_x, mouse_y)
-        
-        # Передаем координаты отпускания в метод release_object игрового поля
-        game_board.release_object(released_row, released_col)
+    Args:
+        game_board (GameBoard): Игровое поле.
 
-def get_clicked_cell(mouse_x, mouse_y):
-    # Определение координат ячейки, в которую произошел клик мыши
-    row = mouse_y // CELL_SIZE
-    col = mouse_x // CELL_SIZE
-    return row, col
+    Returns:
+        bool: Флаг, указывающий, нужно ли завершить игру.
+    """
+    quit_game = False
+
+    # Обработка событий
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            quit_game = True
+        elif event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                quit_game = True
+            elif event.key == K_UP:
+                game_board.move_up()
+            elif event.key == K_DOWN:
+                game_board.move_down()
+            elif event.key == K_LEFT:
+                game_board.move_left()
+            elif event.key == K_RIGHT:
+                game_board.move_right()
+
+    return quit_game
