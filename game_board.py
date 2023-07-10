@@ -1,6 +1,8 @@
 import pygame
 import random
 from game_logic import check_matches, generate_objects, update_score, load_random_object_image
+from mouse_handler import MouseHandler
+
 
 # Определение размеров поля
 GRID_WIDTH = 8  # Количество ячеек по горизонтали
