@@ -1,4 +1,7 @@
 import random
+import game_board
+
+
 
 def check_matches(game_board):
     """Проверяет наличие совпадений на игровом поле и удаляет их.
